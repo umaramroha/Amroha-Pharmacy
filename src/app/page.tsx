@@ -7,10 +7,10 @@ export default function Home() {
       <section className="bg-gradient-to-br from-primary to-primary-dark text-white py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Welcome to Amroha Pharmacy 
+            Welcome to Amroha Pharmacy
           </h1>
           <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90">
-            Your trusted source for authentic Ayurvedic & Unani medicines. 
+            Your trusted source for authentic Ayurvedic & Unani medicines.
             Delivering wellness across India.
           </p>
           <div className="flex gap-4 flex-wrap justify-center">
@@ -44,7 +44,9 @@ export default function Home() {
               <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
                 <span className="text-3xl">💊</span>
               </div>
-              <h3 className="text-xl font-bold mb-2 text-primary">Male Problems</h3>
+              <h3 className="text-xl font-bold mb-2 text-primary">
+                Male Problems
+              </h3>
               <p className="text-gray-600 text-sm">
                 Ayurvedic & Unani solutions for men&apos;s health
               </p>
@@ -57,7 +59,9 @@ export default function Home() {
               <div className="w-16 h-16 mx-auto mb-4 bg-secondary/10 rounded-full flex items-center justify-center">
                 <span className="text-3xl">🌸</span>
               </div>
-              <h3 className="text-xl font-bold mb-2 text-secondary">Female Problems</h3>
+              <h3 className="text-xl font-bold mb-2 text-secondary">
+                Female Problems
+              </h3>
               <p className="text-gray-600 text-sm">
                 Trusted remedies for women&apos;s wellness
               </p>
@@ -70,7 +74,9 @@ export default function Home() {
               <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
                 <span className="text-3xl">🌿</span>
               </div>
-              <h3 className="text-xl font-bold mb-2 text-green-700">General Problems</h3>
+              <h3 className="text-xl font-bold mb-2 text-green-700">
+                General Problems
+              </h3>
               <p className="text-gray-600 text-sm">
                 Everyday health solutions for the whole family
               </p>
@@ -124,7 +130,8 @@ export default function Home() {
             Need Help Choosing?
           </h2>
           <p className="text-gray-600 mb-6 max-w-xl mx-auto">
-            Our experts are here to help you find the right medicine for your health needs.
+            Our experts are here to help you find the right medicine for your
+            health needs.
           </p>
           <Link
             href="/contact"
@@ -136,4 +143,4 @@ export default function Home() {
       </section>
     </div>
   );
-}/
+}
