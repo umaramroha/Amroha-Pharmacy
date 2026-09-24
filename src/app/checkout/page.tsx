@@ -139,7 +139,7 @@ export default function CheckoutPage() {
           Order Placed Successfully!
         </h1>
         <p className="text-gray-600 mb-8">
-          Thank you for shopping with A2Z Pharma. We&apos;ll contact you soon on
+          Thank you for shopping with Amroha Pharmacy. We&apos;ll contact you soon on
           your mobile number.
         </p>
         <div className="flex gap-3 justify-center flex-wrap">

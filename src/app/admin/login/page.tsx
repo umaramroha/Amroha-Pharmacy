@@ -76,7 +76,7 @@ export default function AdminLogin() {
               Admin Login
             </h1>
             <p className="text-sm text-gray-600">
-              A2Z Pharma Management Panel
+              Amroha Pharmacy Management Panel
             </p>
           </div>
 

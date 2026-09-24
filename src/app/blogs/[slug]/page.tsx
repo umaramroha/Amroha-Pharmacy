@@ -29,7 +29,7 @@ MAIN DIFFERENCES
 
 Dono hi padhatiya sharir ki Immunity aur self-healing capacity ko badhati hain. Aapki prakriti aur bimari ke hisab se expert practitioner inka chunaav karte hain.
 
-A2Z Pharma pe aapko dono padhatiyo ki authentic medicines milti hain — chahe Ayurvedic Capsule ho ya Unani Majoon. Koi bhi confusion ho toh humein WhatsApp pe puchh sakte ho.`,
+Amroha Pharmacy pe aapko dono padhatiyo ki authentic medicines milti hain — chahe Ayurvedic Capsule ho ya Unani Majoon. Koi bhi confusion ho toh humein WhatsApp pe puchh sakte ho.`,
   },
   "digestive-health-herbal-remedies": {
     title: "Paachan Tantra Ko Mazboot Banane Ke Top 5 Herbal Nuskhe (Ayurvedic & Unani Guide)",
@@ -53,7 +53,7 @@ Kabz (constipation) se raahat ke liye ye sabse safe aur natural fiber source hai
 5️⃣ HINGWASHTAK CHURNA
 Khana pachane aur bhookh badhane me madadgar.
 
-In sab herbal remedies ke liye A2Z Pharma pe visit karo ya WhatsApp pe order kar do. Ghar baithe authentic medicines milegi.`,
+In sab herbal remedies ke liye Amroha Pharmacy pe visit karo ya WhatsApp pe order kar do. Ghar baithe authentic medicines milegi.`,
   },
   "immunity-boosters-ayurveda-unani": {
     title: "Badalte Mausam Me Immunity Badhane Ke Liye Best Ayurvedic & Unani Aushadhiya",
@@ -74,7 +74,7 @@ Blood purify karta hai aur sharir ke natural defence mechanism ko boost karta ha
 🌟 TULSI & DALCHINI TEA
 Natural antioxidant properties se bharpoor jo cough aur cold se bachat karti hain.
 
-A2Z Pharma pe ye sab authentic products available hain. Immunity strong rakho, bimaari se door raho.`,
+Amroha Pharmacy pe ye sab authentic products available hain. Immunity strong rakho, bimaari se door raho.`,
   },
   "joint-pain-natural-relief": {
     title: "Jodo Ke Dard Aur Stiffness Se Rahat: Natural Oil Aur Herbal Formulations",
@@ -95,7 +95,7 @@ Muscular strength aur stamina ko maintain rakhne me madad karte hain.
 🌿 MAJOON SURANJAN (Unani)
 Joint pain, gout aur uric acid ki samsya me Unani padhati ka ek prasiddh nuskha.
 
-A2Z Pharma pe ye sab available hain. WhatsApp pe direct order kar sakte ho.`,
+Amroha Pharmacy pe ye sab available hain. WhatsApp pe direct order kar sakte ho.`,
   },
 };
 

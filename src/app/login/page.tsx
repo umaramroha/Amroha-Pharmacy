@@ -37,7 +37,7 @@ export default function LoginPage() {
               Welcome Back
             </h1>
             <p className="text-sm text-gray-600">
-              Login to your A2Z Pharma account
+              Login to your Amroha Pharmacy account
             </p>
           </div>
 
@@ -90,7 +90,7 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center text-sm text-gray-600 mt-6">
-            New to A2Z Pharma?{" "}
+            New to Amroha Pharmacy?{" "}
             <Link
               href="/register"
               className="text-primary font-semibold hover:underline"

@@ -59,7 +59,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               Create Account
             </h1>
             <p className="text-sm text-gray-600">
-              Register to start shopping with A2Z Pharma
+              Register to start shopping with Amroha Pharmacy
             </p>
           </div>
 

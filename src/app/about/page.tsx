@@ -6,7 +6,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary to-primary-dark text-white py-12 md:py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">About A2Z Pharma</h1>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">About Amroha Pharmacy</h1>
           <p className="text-lg max-w-2xl mx-auto opacity-90">
             Authentic Ayurvedic & Unani medicines, trusted by families across India
           </p>
@@ -19,7 +19,7 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold mb-6 text-primary text-center">Our Story</h2>
           <div className="prose prose-lg max-w-none text-gray-700 space-y-4">
             <p>
-              A2Z Pharma was founded with a simple mission — to make authentic Ayurvedic and Unani medicines easily accessible to every Indian household. Based in Amroha, Uttar Pradesh, we have been serving our community with genuine, high-quality traditional medicines.
+              Amroha Pharmacy was founded with a simple mission — to make authentic Ayurvedic and Unani medicines easily accessible to every Indian household. Based in Amroha, Uttar Pradesh, we have been serving our community with genuine, high-quality traditional medicines.
             </p>
             <p>
               We believe that nature has the power to heal, and our ancestors&apos; wisdom in Ayurveda and Unani systems of medicine holds the key to holistic wellness. Every product we sell is carefully sourced from trusted manufacturers and traditional practitioners.
@@ -79,7 +79,7 @@ export default function AboutPage() {
       <section className="bg-white py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-5xl">
           <h2 className="text-3xl font-bold mb-10 text-center text-primary">
-            Why Choose A2Z Pharma?
+            Why Choose Amroha Pharmacy?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex gap-4 p-4">
