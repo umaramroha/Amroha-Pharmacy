@@ -7,6 +7,8 @@ export const siteConfig = {
   whatsappRaw: "918077988509",
   email: "Amrohapharmastore@gmail.com",
   address: "Amroha, Uttar Pradesh, India",
+ upiId: "umarimam@upi", 
+  upiName: "Amroha Pharmacy",
 };
 
 export const deliveryConfig = {

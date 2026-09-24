@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { siteConfig } from "@/lib/config";
+import { getWhatsAppLink } from "@/lib/whatsapp";
 
 export default function CheckoutPage() {
   const { items, totalPrice, totalItems, clearCart } = useCart();
@@ -25,6 +27,28 @@ export default function CheckoutPage() {
     state: "",
     pincode: "",
   });
+
+  // Generate UPI payment link
+  const upiLink = `upi://pay?pa=${siteConfig.upiId}&pn=${encodeURIComponent(
+    siteConfig.upiName
+  )}&am=${finalTotal}&cu=INR&tn=${encodeURIComponent(
+    `Order ${Date.now().toString().slice(-6)}`
+  )}`;
+
+  // QR code URL (using free QR server API)
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
+    upiLink
+  )}`;
+
+  // Payment screenshot WhatsApp message
+  const paymentScreenshotMessage = `📸 *Payment Screenshot*
+
+👤 Name: ${formData.name}
+📱 Mobile: ${formData.mobile}
+💰 Amount: ₹${finalTotal}
+💳 Payment Method: UPI
+
+Ye raha mera payment screenshot. Order confirm karein please.`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +109,6 @@ export default function CheckoutPage() {
       <div className="container mx-auto px-4 py-16 text-center">
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-32 mx-auto"></div>
         </div>
       </div>
     );
@@ -96,12 +119,8 @@ export default function CheckoutPage() {
     return (
       <div className="container mx-auto px-4 py-16 text-center max-w-md">
         <div className="text-6xl mb-4">🔒</div>
-        <h1 className="text-2xl font-bold mb-4 text-primary">
-          Login Required
-        </h1>
-        <p className="text-gray-600 mb-8">
-          Please login to place your order.
-        </p>
+        <h1 className="text-2xl font-bold mb-4 text-primary">Login Required</h1>
+        <p className="text-gray-600 mb-8">Please login to place your order.</p>
         <Link
           href="/login"
           className="inline-block bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-full font-semibold transition"
@@ -139,9 +158,27 @@ export default function CheckoutPage() {
           Order Placed Successfully!
         </h1>
         <p className="text-gray-600 mb-8">
-          Thank you for shopping with Amroha Pharmacy. We&apos;ll contact you soon on
-          your mobile number.
+          Thank you for shopping with {siteConfig.name}. We&apos;ll contact you
+          soon on your mobile number.
         </p>
+
+        {paymentMethod === "upi" && (
+          <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
+            <p className="font-semibold mb-2">📸 Payment Screenshot Bhejna Na Bhoolen</p>
+            <p className="mb-3">
+              Order confirm karne ke liye apna payment screenshot WhatsApp pe bhejein.
+            </p>
+            <a
+              href={getWhatsAppLink(paymentScreenshotMessage)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-2.5 rounded-full font-semibold transition"
+            >
+              📤 Send Screenshot on WhatsApp
+            </a>
+          </div>
+        )}
+
         <div className="flex gap-3 justify-center flex-wrap">
           <Link
             href="/orders"
@@ -170,7 +207,6 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left: Form */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Error Message */}
             {orderError && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
                 {orderError}
@@ -334,26 +370,71 @@ export default function CheckoutPage() {
                     className="w-4 h-4"
                   />
                   <div>
-                    <p className="font-semibold">📱 UPI Payment (QR Code)</p>
+                    <p className="font-semibold">📱 UPI Payment (Prepaid)</p>
                     <p className="text-xs text-gray-500">
-                      Scan QR code and pay instantly
+                      Scan QR code or pay via UPI app
                     </p>
                   </div>
                 </label>
 
                 {paymentMethod === "upi" && (
-                  <div className="mt-4 p-6 bg-gray-50 rounded-lg text-center border">
-                    <p className="text-sm text-gray-600 mb-4">
-                      Scan this QR code to pay ₹{finalTotal}
-                    </p>
-                    <div className="w-48 h-48 mx-auto bg-white border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
-                      <p className="text-xs text-gray-400 px-4">
-                        QR Code will be added after payment integration
+                  <div className="mt-4 p-5 bg-gray-50 rounded-lg border space-y-4">
+                    {/* QR Code */}
+                    <div className="text-center">
+                      <p className="text-sm font-semibold text-gray-700 mb-3">
+                        Scan karke pay karein ₹{finalTotal}
+                      </p>
+                      <div className="w-56 h-56 mx-auto bg-white border-2 border-primary/20 rounded-lg flex items-center justify-center p-2">
+                        <img
+                          src={qrCodeUrl}
+                          alt="UPI QR Code"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500 mt-3">
+                        GPay, PhonePe, Paytm, ya kisi bhi UPI app se scan karein
                       </p>
                     </div>
-                    <p className="text-xs text-gray-500 mt-4">
-                      After payment, place your order below
-                    </p>
+
+                    {/* Divider */}
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 h-px bg-gray-300"></div>
+                      <span className="text-xs text-gray-500 font-medium">
+                        YA
+                      </span>
+                      <div className="flex-1 h-px bg-gray-300"></div>
+                    </div>
+
+                    {/* UPI ID - Click to Pay */}
+                    <div className="text-center">
+                      <p className="text-xs text-gray-600 mb-2">
+                        Neeche UPI ID pe click karein — payment app khul jayega
+                      </p>
+                      <a
+                        href={upiLink}
+                        className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-semibold transition"
+                      >
+                        💳 Pay ₹{finalTotal} via UPI App
+                      </a>
+                      <p className="text-xs text-gray-500 mt-3 font-mono">
+                        {siteConfig.upiId}
+                      </p>
+                    </div>
+
+                    {/* Screenshot Share */}
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
+                      <p className="text-xs text-green-800 font-semibold mb-2">
+                        📸 Payment ke baad screenshot bhejna zaroori hai
+                      </p>
+                      <a
+                        href={getWhatsAppLink(paymentScreenshotMessage)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-full text-sm font-semibold transition"
+                      >
+                        📤 Share Screenshot on WhatsApp
+                      </a>
+                    </div>
                   </div>
                 )}
               </div>
