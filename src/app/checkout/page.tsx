@@ -28,16 +28,11 @@ export default function CheckoutPage() {
     pincode: "",
   });
 
-  // Generate UPI payment link
+  // Generate UPI payment link (click-to-pay)
   const upiLink = `upi://pay?pa=${siteConfig.upiId}&pn=${encodeURIComponent(
     siteConfig.upiName
   )}&am=${finalTotal}&cu=INR&tn=${encodeURIComponent(
     `Order ${Date.now().toString().slice(-6)}`
-  )}`;
-
-  // QR code URL (using free QR server API)
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
-    upiLink
   )}`;
 
   // Payment screenshot WhatsApp message
@@ -164,9 +159,12 @@ Ye raha mera payment screenshot. Order confirm karein please.`;
 
         {paymentMethod === "upi" && (
           <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
-            <p className="font-semibold mb-2">📸 Payment Screenshot Bhejna Na Bhoolen</p>
+            <p className="font-semibold mb-2">
+              📸 Payment Screenshot Bhejna Na Bhoolen
+            </p>
             <p className="mb-3">
-              Order confirm karne ke liye apna payment screenshot WhatsApp pe bhejein.
+              Order confirm karne ke liye apna payment screenshot WhatsApp pe
+              bhejein.
             </p>
             <a
               href={getWhatsAppLink(paymentScreenshotMessage)}
@@ -379,15 +377,15 @@ Ye raha mera payment screenshot. Order confirm karein please.`;
 
                 {paymentMethod === "upi" && (
                   <div className="mt-4 p-5 bg-gray-50 rounded-lg border space-y-4">
-                    {/* QR Code */}
+                    {/* QR Code — Paytm QR Image */}
                     <div className="text-center">
                       <p className="text-sm font-semibold text-gray-700 mb-3">
                         Scan karke pay karein ₹{finalTotal}
                       </p>
-                      <div className="w-56 h-56 mx-auto bg-white border-2 border-primary/20 rounded-lg flex items-center justify-center p-2">
+                      <div className="w-64 h-64 mx-auto bg-white border-2 border-primary/20 rounded-lg flex items-center justify-center p-2">
                         <img
-                          src={qrCodeUrl}
-                          alt="UPI QR Code"
+                          src="/paytm-qr.png"
+                          alt="Paytm QR Code"
                           className="w-full h-full object-contain"
                         />
                       </div>
@@ -405,10 +403,10 @@ Ye raha mera payment screenshot. Order confirm karein please.`;
                       <div className="flex-1 h-px bg-gray-300"></div>
                     </div>
 
-                    {/* UPI ID - Click to Pay */}
+                    {/* UPI ID — Click to Pay */}
                     <div className="text-center">
                       <p className="text-xs text-gray-600 mb-2">
-                        Neeche UPI ID pe click karein — payment app khul jayega
+                        Neeche button pe click karein — payment app khul jayega
                       </p>
                       <a
                         href={upiLink}
@@ -416,9 +414,14 @@ Ye raha mera payment screenshot. Order confirm karein please.`;
                       >
                         💳 Pay ₹{finalTotal} via UPI App
                       </a>
-                      <p className="text-xs text-gray-500 mt-3 font-mono">
-                        {siteConfig.upiId}
-                      </p>
+                      <div className="mt-3 p-2 bg-white rounded-lg border inline-block">
+                        <p className="text-xs text-gray-500 mb-0.5">
+                          UPI ID:
+                        </p>
+                        <p className="text-sm font-semibold text-gray-800 font-mono">
+                          {siteConfig.upiId}
+                        </p>
+                      </div>
                     </div>
 
                     {/* Screenshot Share */}
