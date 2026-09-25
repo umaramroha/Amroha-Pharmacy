@@ -409,15 +409,21 @@ export default function ProductDetailPage({
           </div>
 
           {/* Delivery Info */}
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg text-sm">
-            <p className="mb-1">
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg text-sm space-y-1">
+            <p>
               💵 <strong>Cash on Delivery</strong> available (select pincodes)
             </p>
-            <p className="mb-1">
+            <p>
               📱 <strong>UPI Payment</strong> accepted
             </p>
             <p>
-              🚚 <strong>Free Delivery</strong> on orders above ₹500 (UP)
+              🚚 <strong>Free Delivery</strong> —{" "}
+              <span className="text-primary font-semibold">
+                Amroha me hamesha FREE
+              </span>
+            </p>
+            <p className="text-xs text-gray-500 pl-1">
+              Baaki India: UP me ₹500+, National me ₹800+ orders pe free
             </p>
           </div>
         </div>
