@@ -26,7 +26,7 @@ export default function Home() {
       title: "Order on WhatsApp",
       subtitle: "Quick ordering, expert guidance, and easy support",
       cta: "Chat Now",
-      href: "https://wa.me/918410127168",
+      href: "https://wa.me/918077988509",
       bg: "from-primary-dark to-primary",
     },
   ];
@@ -147,17 +147,17 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {[
-              { name: "Men's Vitality", icon: "🦁", slug: "mens-vitality" },
-              { name: "Sexual Health", icon: "🛡️", slug: "sexual-health" },
-              { name: "Gastric & Acidity", icon: "🫀", slug: "gastric-digestion" },
-              { name: "Weight Loss", icon: "📏", slug: "weight-loss" },
-              { name: "Weight Gain", icon: "💪", slug: "weight-gain" },
-              { name: "Joints & Pain", icon: "🦵", slug: "joints-pain" },
-              { name: "Skin & Glow", icon: "✨", slug: "skin-glow" },
-              { name: "Hair Care", icon: "💇", slug: "hair-care" },
-              { name: "Diabetes", icon: "🩸", slug: "diabetes" },
-              { name: "Women's Health", icon: "💗", slug: "womens-health" },
-            ].map((concern) => (
+  { name: "Men's Vitality", icon: "🦁", slug: "mens-vitality" },
+  { name: "Sexual Health", icon: "🛡️", slug: "sexual-health" },
+  { name: "Male Fertility", icon: "👶", slug: "male-fertility" },
+  { name: "Women's Health", icon: "💗", slug: "womens-health" },
+  { name: "Likoria", icon: "🩺", slug: "white-discharge" },
+  { name: "Gastric & Acidity", icon: "🫀", slug: "gastric-digestion" },
+  { name: "Weight Loss", icon: "📏", slug: "weight-loss" },
+  { name: "Weight Gain", icon: "💪", slug: "weight-gain" },
+  { name: "Joints & Pain", icon: "🦵", slug: "joints-pain" },
+  { name: "Diabetes", icon: "🩸", slug: "diabetes" },
+].map((concern) => (
               <Link
                 key={concern.slug}
                 href={`/products?concern=${concern.slug}`}
