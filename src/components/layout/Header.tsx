@@ -31,6 +31,28 @@ export default function Header() {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       {/* TOP ROW */}
+{/* Top Bar */}
+<div className="bg-primary text-white text-xs md:text-sm">
+  <div className="container mx-auto px-4 py-1.5 flex justify-between items-center flex-wrap gap-2">
+    <div className="flex items-center gap-4">
+      <span>🚚 Free Delivery on ₹500+</span>
+      <span className="hidden md:inline">💵 COD Available</span>
+    </div>
+    <div className="flex items-center gap-4">
+      <a href="tel:+918410127168" className="hover:text-secondary transition">
+        📞 +91 84101 27168
+      </a>
+      <a
+        href="https://wa.me/918410127168"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:text-secondary transition"
+      >
+        💬 WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
       <div className="container mx-auto px-4 py-3 flex items-center gap-4">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image
