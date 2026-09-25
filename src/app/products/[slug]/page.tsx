@@ -4,6 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/contexts/CartContext";
 import { getWhatsAppLink, getProductOrderMessage } from "@/lib/whatsapp";
+import {
+  getDeliveryInfo,
+  validatePincode,
+  getDeliveryDate,
+} from "@/data/delivery";
 
 type Product = {
   id: string;
@@ -40,6 +45,8 @@ export default function ProductDetailPage({
   const [activeTab, setActiveTab] = useState<Tab>("description");
   const [pincode, setPincode] = useState("");
   const [deliveryCheck, setDeliveryCheck] = useState<string | null>(null);
+  const [deliveryInfo, setDeliveryInfo] = useState<any>(null);
+  const [checkingPincode, setCheckingPincode] = useState(false);
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -54,16 +61,15 @@ export default function ProductDetailPage({
         const data = await res.json();
         setProduct(data.product);
 
-        // Fetch similar products
         if (data.product.category) {
           const simRes = await fetch(
             `/api/products?category=${data.product.category}`
           );
           const simData = await simRes.json();
           setSimilar(
-            (simData.products || []).filter(
-              (p: Product) => p.id !== data.product.id
-            ).slice(0, 4)
+            (simData.products || [])
+              .filter((p: Product) => p.id !== data.product.id)
+              .slice(0, 4)
           );
         }
       } catch (err) {
@@ -125,31 +131,50 @@ export default function ProductDetailPage({
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const handleDeliveryCheck = (e: React.FormEvent) => {
+  const handleDeliveryCheck = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (pincode.length !== 6 || !/^\d+$/.test(pincode)) {
       setDeliveryCheck("❌ Please enter a valid 6-digit pincode");
+      setDeliveryInfo(null);
       return;
     }
-    // Simple check — pincode starts with 2 = UP region (Amroha area)
-    if (pincode.startsWith("2")) {
-      setDeliveryCheck(
-        `✅ Delivery available! Estimated: ${getDeliveryDate(3)} - ${getDeliveryDate(5)}`
-      );
-    } else {
-      setDeliveryCheck(
-        `✅ Delivery available! Estimated: ${getDeliveryDate(5)} - ${getDeliveryDate(7)}`
-      );
-    }
-  };
 
-  const getDeliveryDate = (days: number) => {
-    const date = new Date();
-    date.setDate(date.getDate() + days);
-    return date.toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "short",
+    setCheckingPincode(true);
+    setDeliveryCheck(null);
+
+    const validation = await validatePincode(pincode);
+
+    if (!validation.valid) {
+      setDeliveryCheck(
+        "❌ Invalid pincode. Kripya sahi 6-digit pincode daalein."
+      );
+      setDeliveryInfo(null);
+      setCheckingPincode(false);
+      return;
+    }
+
+    const info = getDeliveryInfo(pincode);
+
+    if (!info.available) {
+      setDeliveryCheck(`❌ ${info.message}`);
+      setDeliveryInfo(null);
+      setCheckingPincode(false);
+      return;
+    }
+
+    setDeliveryInfo({
+      city: validation.city,
+      state: validation.state,
+      zone: info.zone,
+      days: info.deliveryDays,
+      fee: info.deliveryFee,
+      codAvailable: info.codAvailable,
+      discount: info.discount,
+      offerMessage: info.offerMessage,
     });
+    setDeliveryCheck(info.message || "");
+    setCheckingPincode(false);
   };
 
   const categoryLabels: Record<string, string> = {
@@ -319,31 +344,80 @@ export default function ProductDetailPage({
                 onChange={(e) =>
                   setPincode(e.target.value.replace(/\D/g, ""))
                 }
-                placeholder="Enter pincode"
+                placeholder="Enter 6-digit pincode"
                 className="flex-1 border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:border-primary"
               />
               <button
                 type="submit"
-                className="bg-primary hover:bg-primary-dark text-white px-5 py-2 rounded-md text-sm font-semibold transition"
+                disabled={checkingPincode}
+                className="bg-primary hover:bg-primary-dark text-white px-5 py-2 rounded-md text-sm font-semibold transition disabled:opacity-50"
               >
-                Check
+                {checkingPincode ? "..." : "Check"}
               </button>
             </form>
-            {deliveryCheck && (
-              <p className="text-sm mt-3 font-medium">{deliveryCheck}</p>
+
+            {deliveryCheck && !deliveryInfo && (
+              <p className="text-sm mt-3 font-medium text-red-600">
+                {deliveryCheck}
+              </p>
+            )}
+
+            {deliveryInfo && (
+              <div className="mt-4 p-3 bg-white rounded-md border border-green-200 space-y-2 text-sm">
+                {deliveryInfo.city && (
+                  <p className="text-green-700 font-semibold">
+                    📍 {deliveryInfo.city}, {deliveryInfo.state}
+                  </p>
+                )}
+                {deliveryInfo.days && (
+                  <p className="text-gray-700">
+                    🚚 Delivery:{" "}
+                    <strong>
+                      {getDeliveryDate(deliveryInfo.days[0])} -{" "}
+                      {getDeliveryDate(deliveryInfo.days[1])}
+                    </strong>
+                  </p>
+                )}
+                {deliveryInfo.fee !== undefined && (
+                  <p className="text-gray-700">
+                    💰 Delivery Fee:{" "}
+                    {deliveryInfo.fee === 0 ? (
+                      <strong className="text-green-600">FREE</strong>
+                    ) : (
+                      <strong>₹{deliveryInfo.fee}</strong>
+                    )}
+                  </p>
+                )}
+                {deliveryInfo.offerMessage && (
+                  <p className="text-secondary font-semibold">
+                    {deliveryInfo.offerMessage}
+                  </p>
+                )}
+                <p
+                  className={`font-semibold ${
+                    deliveryInfo.codAvailable
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {deliveryInfo.codAvailable
+                    ? "✅ COD Available"
+                    : "⚠️ COD available nahi hai. Sirf UPI Payment"}
+                </p>
+              </div>
             )}
           </div>
 
           {/* Delivery Info */}
           <div className="mt-4 p-4 bg-gray-50 rounded-lg text-sm">
             <p className="mb-1">
-              💵 <strong>Cash on Delivery</strong> available
+              💵 <strong>Cash on Delivery</strong> available (select pincodes)
             </p>
             <p className="mb-1">
               📱 <strong>UPI Payment</strong> accepted
             </p>
             <p>
-              🚚 <strong>Free Delivery</strong> on orders above ₹500
+              🚚 <strong>Free Delivery</strong> on orders above ₹500 (UP)
             </p>
           </div>
         </div>
@@ -449,7 +523,9 @@ export default function ProductDetailPage({
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start gap-3">
                 <span className="text-red-500 mt-0.5">⚠</span>
-                <span>Pregnancy ya breastfeeding ke dauran doctor se puchhein</span>
+                <span>
+                  Pregnancy ya breastfeeding ke dauran doctor se puchhein
+                </span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-red-500 mt-0.5">⚠</span>
@@ -457,7 +533,9 @@ export default function ProductDetailPage({
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-red-500 mt-0.5">⚠</span>
-                <span>Prescribed medicines ke saath lene se pehle doctor se puchhein</span>
+                <span>
+                  Prescribed medicines ke saath lene se pehle doctor se puchhein
+                </span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-red-500 mt-0.5">⚠</span>
@@ -465,7 +543,10 @@ export default function ProductDetailPage({
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-red-500 mt-0.5">⚠</span>
-                <span>Kisi bhi side-effect pe turant band karein aur doctor se milein</span>
+                <span>
+                  Kisi bhi side-effect pe turant band karein aur doctor se
+                  milein
+                </span>
               </li>
             </ul>
           )}
