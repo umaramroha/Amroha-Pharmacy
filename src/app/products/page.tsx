@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState, useMemo, useEffect } from "react";
 import { concerns } from "@/data/concerns";
+import ProductCard from "@/components/product/ProductCard";
 
 type Product = {
   id: string;
@@ -14,6 +15,7 @@ type Product = {
   image: string | null;
   category: string | null;
   description: string | null;
+  stock: number;
 };
 
 const priceRanges = [
@@ -41,7 +43,6 @@ function ProductsContent() {
   const [sortBy, setSortBy] = useState("default");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -64,7 +65,6 @@ function ProductsContent() {
     fetchProducts();
   }, [categoryParam, query]);
 
-  // Client-side filtering and sorting
   const filteredProducts = useMemo(() => {
     let result = [...allProducts];
 
@@ -105,7 +105,6 @@ function ProductsContent() {
 
   const FilterContent = () => (
     <div className="space-y-6">
-      {/* Concerns */}
       <div>
         <h3 className="font-bold text-primary mb-3">Shop by Concern</h3>
         <div className="space-y-1.5">
@@ -122,7 +121,6 @@ function ProductsContent() {
         </div>
       </div>
 
-      {/* Category */}
       <div className="border-t pt-5">
         <h3 className="font-bold text-primary mb-3">Category</h3>
         <div className="space-y-1.5">
@@ -152,7 +150,6 @@ function ProductsContent() {
         </div>
       </div>
 
-      {/* Price Range */}
       <div className="border-t pt-5">
         <h3 className="font-bold text-primary mb-3">Price</h3>
         <div className="space-y-1.5">
@@ -172,7 +169,6 @@ function ProductsContent() {
         </div>
       </div>
 
-      {/* Clear All */}
       {(priceRange !== "all" || sortBy !== "default" || categoryParam || query) && (
         <div className="border-t pt-5">
           <Link
@@ -192,7 +188,6 @@ function ProductsContent() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl md:text-4xl font-bold mb-2 text-primary">
           {pageTitle}
@@ -203,16 +198,13 @@ function ProductsContent() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar — Desktop */}
         <aside className="hidden lg:block lg:col-span-1">
           <div className="bg-white rounded-lg border shadow-sm p-5 sticky top-24">
             <FilterContent />
           </div>
         </aside>
 
-        {/* Main Content */}
         <div className="lg:col-span-3">
-          {/* Top Bar: Mobile Filter + Sort */}
           <div className="flex items-center justify-between mb-4 gap-3">
             <button
               onClick={() => setMobileFilterOpen(true)}
@@ -242,19 +234,14 @@ function ProductsContent() {
             </div>
           </div>
 
-          {/* Products Grid */}
           {loading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-lg border overflow-hidden animate-pulse"
+                  className="bg-white rounded-xl border overflow-hidden animate-pulse"
                 >
                   <div className="aspect-square bg-gray-200"></div>
-                  <div className="p-4 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                  </div>
                 </div>
               ))}
             </div>
@@ -276,61 +263,14 @@ function ProductsContent() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-              {filteredProducts.map((product) => {
-                const mrp = product.mrp
-                  ? parseFloat(product.mrp)
-                  : parseFloat(product.price);
-                const price = parseFloat(product.price);
-                const discount = Math.round(((mrp - price) / mrp) * 100);
-
-                return (
-                  <Link
-                    key={product.id}
-                    href={`/products/${product.slug}`}
-                    className="bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden border group"
-                  >
-                    <div className="aspect-square bg-gray-100 overflow-hidden relative">
-                      {product.image ? (
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-4xl text-gray-300">
-                          💊
-                        </div>
-                      )}
-                      {discount > 0 && (
-                        <span className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">
-                          {discount}% OFF
-                        </span>
-                      )}
-                    </div>
-                    <div className="p-3 md:p-4">
-                      <h3 className="font-semibold text-sm md:text-base mb-2 line-clamp-2 min-h-[2.5rem]">
-                        {product.name}
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-primary">
-                          ₹{product.price}
-                        </span>
-                        {product.mrp && parseFloat(product.mrp) > price && (
-                          <span className="text-sm text-gray-400 line-through">
-                            ₹{product.mrp}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* Mobile Filter Drawer */}
       {mobileFilterOpen && (
         <>
           <div

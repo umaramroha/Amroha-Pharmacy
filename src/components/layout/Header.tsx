@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Header() {
@@ -13,6 +14,7 @@ export default function Header() {
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { totalItems } = useCart();
+  const { totalItems: wishlistCount } = useWishlist();
   const { user, isLoggedIn, logout } = useAuth();
 
   const categories = [
@@ -43,7 +45,7 @@ export default function Header() {
         📞 +91 84101 27168
       </a>
       <a
-        href="https://wa.me/918410127168"
+        href="https://wa.me/918077988509"
         target="_blank"
         rel="noopener noreferrer"
         className="hover:text-secondary transition"
@@ -94,6 +96,32 @@ export default function Header() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-2 md:gap-3 ml-auto">
+
+{/* Wishlist */}
+<Link
+  href="/wishlist"
+  className="relative p-2 hover:bg-gray-100 rounded-full transition"
+  aria-label="Wishlist"
+>
+  <svg
+    className="w-6 h-6 text-primary"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+    />
+  </svg>
+  {wishlistCount > 0 && (
+    <span className="absolute -top-0 -right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+      {wishlistCount}
+    </span>
+  )}
+</Link>
           {/* Cart */}
           <Link
             href="/cart"
@@ -322,8 +350,8 @@ export default function Header() {
             {isLoggedIn && user ? (
               <div className="bg-white/10 rounded-lg p-3 mb-2">
                 <p className="text-xs opacity-80">Signed in as</p>
-                <p className="font-semibold">{user.name}</p>
-                <p className="text-xs opacity-80">{user.email}</p>
+                <p className="font-semibold">{user.name}</p>  
+              <p className="text-xs opacity-80">{user.email}</p>
               </div>
             ) : null}
 
