@@ -160,7 +160,7 @@ export default function Home() {
 ].map((concern) => (
               <Link
                 key={concern.slug}
-                href={`/products?concern=${concern.slug}`}
+                href={`/concerns/${concern.slug}`}
                 className="group flex flex-col items-center text-center p-3 rounded-xl hover:bg-primary/5 transition"
               >
                 <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/10 rounded-full flex items-center justify-center mb-3 group-hover:bg-primary group-hover:scale-105 transition duration-300">
