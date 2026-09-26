@@ -20,7 +20,7 @@ export default function ShippingPolicyPage() {
             Shipping & Delivery Policy
           </h1>
           <p className="text-sm text-gray-500 mb-8">
-            Effective Date: [DD/MM/YYYY] | Last Updated: [DD/MM/YYYY]
+            Effective Date: 26/09/2026 | Last Updated: 26/09/2026
           </p>
 
           <div className="prose prose-sm md:prose-base max-w-none text-gray-700 space-y-6">
@@ -216,9 +216,9 @@ export default function ShippingPolicyPage() {
 
             <p>
               Amroha Pharmacy<br />
-              [FULL ADDRESS, AMROHA, UTTAR PRADESH, INDIA]<br />
-              Email: [OFFICIAL EMAIL]<br />
-              Phone/WhatsApp: [PHONE/WHATSAPP NUMBER]
+              Mohalla Nal, Amroha, Uttar Pradesh, India<br />
+              Email: Amrohapharmastore@gmail.com<br />
+              Phone/WhatsApp: +91 80779 88509
             </p>
 
           </div>

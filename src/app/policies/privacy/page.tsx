@@ -21,7 +21,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="text-sm text-gray-500 mb-8">
-            Effective Date: [DD/MM/YYYY] | Last Updated: [DD/MM/YYYY]
+            Effective Date: 26/09/2026 | Last Updated: 26/09/2026
           </p>
 
           <div className="prose prose-sm md:prose-base max-w-none text-gray-700 space-y-6">
@@ -42,13 +42,13 @@ export default function PrivacyPolicyPage() {
 
             <p>
               Business/Trading Name: Amroha Pharmacy<br />
-              Legal Entity/Proprietor: [LEGAL NAME]<br />
-              Registered/Business Address: [FULL ADDRESS, AMROHA, UTTAR PRADESH, INDIA]<br />
-              GSTIN: [GSTIN, IF APPLICABLE]<br />
-              Email: [OFFICIAL EMAIL]<br />
-              Customer Support: [PHONE/WHATSAPP NUMBER]<br />
-              Grievance Officer: [NAME]<br />
-              Grievance Email: [EMAIL ADDRESS]
+              Legal Entity/Proprietor: Umar Imam<br />
+              Registered/Business Address: Mohalla Nal, Amroha, Uttar Pradesh, India<br />
+              GSTIN: Not Applicable<br />
+              Email: Amrohapharmastore@gmail.com<br />
+              Customer Support: +91 80779 88509<br />
+              Grievance Officer: Umar Imam<br />
+              Grievance Email: Amrohapharmastore@gmail.com
             </p>
 
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-3">2. DEFINITIONS</h2>
@@ -246,10 +246,10 @@ export default function PrivacyPolicyPage() {
             </p>
 
             <p>
-              Name: [NAME]<br />
-              Email: [EMAIL ADDRESS]<br />
-              Phone: [PHONE NUMBER]<br />
-              Address: [FULL ADDRESS, AMROHA, UTTAR PRADESH, INDIA]
+              Name: Umar Imam<br />
+              Email: Amrohapharmastore@gmail.com<br />
+              Phone: +91 80779 88509<br />
+              Address: Mohalla Nal, Amroha, Uttar Pradesh, India
             </p>
 
             <p>
@@ -270,9 +270,9 @@ export default function PrivacyPolicyPage() {
 
             <p>
               Amroha Pharmacy<br />
-              [FULL ADDRESS, AMROHA, UTTAR PRADESH, INDIA]<br />
-              Email: [OFFICIAL EMAIL]<br />
-              Phone/WhatsApp: [PHONE/WHATSAPP NUMBER]
+              Mohalla Nal, Amroha, Uttar Pradesh, India<br />
+              Email: Amrohapharmastore@gmail.com<br />
+              Phone/WhatsApp: +91 80779 88509
             </p>
 
           </div>
