@@ -141,13 +141,18 @@ export async function POST(request: Request) {
 
 // ===== SEND EMAILS =====
 try {
+  // Fetch products separately for names
+  const productIds = items.map((i: any) => i.id);
+  const productList = await prisma.product.findMany({
+    where: { id: { in: productIds } },
+    select: { id: true, name: true },
+  });
+
   // Build order items with product names
   const orderItems = items.map((i: any) => {
-    const matchedItem = order.items.find(
-      (oi: any) => oi.productId === i.id
-    );
+    const product = productList.find((p) => p.id === i.id);
     return {
-      name: matchedItem?.product?.name || "Product",
+      name: product?.name || "Product",
       quantity: i.quantity,
       price: Number(i.price),
     };
