@@ -3,206 +3,218 @@
 import { useState } from "react";
 import { getWhatsAppLink, getContactMessage } from "@/lib/whatsapp";
 
+type FormData = {
+  name: string;
+  mobile: string;
+  email: string;
+  message: string;
+};
+
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     mobile: "",
     email: "",
     message: "",
   });
+
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Build WhatsApp message with form data
-    const message = `📩 *New Contact Message*
+    const cleanMobile = formData.mobile.replace(/\D/g, "");
 
-👤 Name: ${formData.name}
-📱 Mobile: ${formData.mobile}
-📧 Email: ${formData.email || "Not provided"}
+    if (cleanMobile.length < 10 || cleanMobile.length > 12) {
+      alert("Please enter a valid mobile number.");
+      return;
+    }
 
-💬 Message:
-${formData.message}`;
+    const message = `New Contact Message
 
-    // Open WhatsApp with the message
-    window.open(getWhatsAppLink(message), "_blank");
+Name: ${formData.name.trim()}
+Mobile: ${formData.mobile.trim()}
+Email: ${formData.email.trim() || "Not provided"}
+
+Message:
+${formData.message.trim()}
+
+This message was submitted through the Amroha Pharmacy website.`;
+
+    window.open(getWhatsAppLink(message), "_blank", "noopener,noreferrer");
 
     setSent(true);
+
     setTimeout(() => {
       setSent(false);
-      setFormData({ name: "", mobile: "", email: "", message: "" });
+
+      setFormData({
+        name: "",
+        mobile: "",
+        email: "",
+        message: "",
+      });
     }, 4000);
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2 text-primary text-center">
-          Contact Us
-        </h1>
-        <p className="text-gray-600 text-center mb-10">
-          We&apos;re here to help you with your health needs
-        </p>
+    <main className="min-h-screen bg-gray-50">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 md:py-12 lg:px-8">
+        {/* Header */}
+        <header className="mb-10 text-center md:mb-12">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+            Customer Support
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Contact Info */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h2 className="text-xl font-bold mb-6 text-primary">
-              Get in Touch
-            </h2>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
+            Contact Amroha Pharmacy
+          </h1>
 
-            <div className="space-y-5">
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
+            Have a question about an order, product availability, delivery,
+            payment or anything else? Our support team is here to help.
+          </p>
+        </header>
+
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8">
+          {/* Contact Information */}
+          <section className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+            <div className="mb-7 border-b border-gray-100 pb-5">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-primary">
+                Get in Touch
+              </p>
+
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+                We’re here to help
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-gray-500">
+                Contact us through any of the channels below for general
+                customer support.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {/* Address */}
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                  <span className="text-xl">📍</span>
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-primary">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"
+                    />
+                    <circle cx="12" cy="9" r="2.2" />
+                  </svg>
                 </div>
+
                 <div>
-                  <h3 className="font-semibold mb-1">Address</h3>
-                  <p className="text-gray-600 text-sm">
-                    Amroha, Uttar Pradesh, India
+                  <h3 className="text-sm font-semibold text-gray-900">
+                    Business Address
+                  </h3>
+
+                  <p className="mt-1 text-sm leading-6 text-gray-600">
+                    Mohalla Nal, Amroha,
+                    <br />
+                    Uttar Pradesh, India
                   </p>
                 </div>
               </div>
 
+              {/* Phone */}
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                  <span className="text-xl">📞</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Phone</h3>
-                  <a
-                    href="tel:+918410127168"
-                    className="text-gray-600 text-sm hover:text-primary"
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-primary">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
                   >
-                    +91 84101 27168
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5.5 4.5 8 3l3 5-2 1.5a15 15 0 0 0 5.5 5.5L16 13l5 3-1.5 2.5c-.6 1-1.7 1.5-2.9 1.3C9.7 18.3 5.7 14.3 4.2 7.4c-.2-1.2.3-2.3 1.3-2.9Z"
+                    />
+                  </svg>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">
+                    Phone
+                  </h3>
+
+                  <a
+                    href="tel:+918077988509"
+                    className="mt-1 inline-block text-sm text-gray-600 transition hover:text-primary"
+                  >
+                    +91 80779 88509
                   </a>
                 </div>
               </div>
 
+              {/* Email */}
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-                  <span className="text-xl">✉️</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">Email</h3>
-                  <a
-                    href="mailto:your@email.com"
-                    className="text-gray-600 text-sm hover:text-primary"
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-50 text-primary">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
                   >
-                    your@email.com
+                    <rect
+                      x="3"
+                      y="5"
+                      width="18"
+                      height="14"
+                      rx="2"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m4 7 8 6 8-6"
+                    />
+                  </svg>
+                </div>
+
+                <div className="min-w-0">
+                  <h3 className="text-sm font-semibold text-gray-900">
+                    Email
+                  </h3>
+
+                  <a
+                    href="mailto:Amrohapharmastore@gmail.com"
+                    className="mt-1 block break-all text-sm text-gray-600 transition hover:text-primary"
+                  >
+                    Amrohapharmastore@gmail.com
                   </a>
                 </div>
               </div>
 
+              {/* WhatsApp */}
               <div className="flex gap-4">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center shrink-0">
-                  <span className="text-xl">💬</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-1">WhatsApp</h3>
-                  <a
-                    href={getWhatsAppLink(getContactMessage())}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-600 text-sm hover:text-primary"
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-green-200 bg-green-50 text-green-600">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-5 w-5"
+                    fill="currentColor"
                   >
-                    Chat with us
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Form */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h2 className="text-xl font-bold mb-6 text-primary">
-              Send us a Message
-            </h2>
-
-            {sent && (
-              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
-                ✓ Message WhatsApp pe bhej diya gaya!
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Your Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-primary"
-                  placeholder="Enter your name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Mobile Number *
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={formData.mobile}
-                  onChange={(e) =>
-                    setFormData({ ...formData, mobile: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-primary"
-                  placeholder="+91 XXXXXXXXXX"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-primary"
-                  placeholder="your@email.com"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Message *
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-primary resize-none"
-                  placeholder="How can we help you?"
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-full font-semibold transition"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                Send via WhatsApp
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+                    <path d="M20.52 3.48A11.82 11.82 0 0 0 12.08 0C5.54 0 .22 5.32.22 11.86c0 2.09.55 4.13 1.59 5.92L.12 24l6.36-1.67a11.84 11.84 0 0 0 5.6 1.41h.01c6.54 0 11.86-5.32 11.86-11.86 0-3.17-1.23-6.14-3.43-8.4ZM12.09 21.74h-.01a9.83 9.83 0 0 1-5.01-1.37l-.36-.21-3.77.99 1.01-3.67-.23-.38a9.83 9.83 0 0 1-1.51-5.24c0-5.43 4.42-9.85 9.86-9.85 2.63 0 5.1 1.02 6.96 2.88a9.82 9.82 0 0 1 2.89 6.97c-.01 5.43-4.43 9.85-9.83 9.88Zm5.41-7.39c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.
