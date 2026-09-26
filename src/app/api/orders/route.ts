@@ -1,3 +1,8 @@
+import { transporter, FROM_EMAIL, ADMIN_EMAIL } from "@/lib/email/mailer";
+import {
+  getOrderConfirmationHTML,
+  getAdminOrderNotificationHTML,
+} from "@/lib/email/templates";
 import { NextResponse } from "next/server";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
@@ -133,6 +138,67 @@ export async function POST(request: Request) {
 
       return newOrder;
     });
+
+// ===== SEND EMAILS =====
+try {
+  // Build order items with product names
+  const orderItems = items.map((i: any) => {
+    const matchedItem = order.items.find(
+      (oi: any) => oi.productId === i.id
+    );
+    return {
+      name: matchedItem?.product?.name || "Product",
+      quantity: i.quantity,
+      price: Number(i.price),
+    };
+  });
+
+  // Customer confirmation email
+  if (customerEmail) {
+    await transporter.sendMail({
+      from: FROM_EMAIL,
+      to: customerEmail,
+      subject: `✅ Order Confirmed - #${order.id
+        .slice(-8)
+        .toUpperCase()} - Amroha Pharmacy`,
+      html: getOrderConfirmationHTML({
+        customerName,
+        orderId: order.id,
+        items: orderItems,
+        subtotal: Number(subtotal),
+        deliveryFee: Number(deliveryFee),
+        total: Number(total),
+        address: `${address}, ${city}, ${state} - ${pincode}`,
+        paymentMethod,
+      }),
+    });
+  }
+
+  // Admin notification email
+  if (ADMIN_EMAIL) {
+    await transporter.sendMail({
+      from: FROM_EMAIL,
+      to: ADMIN_EMAIL,
+      subject: `🔔 New Order #${order.id
+        .slice(-8)
+        .toUpperCase()} - ₹${total}`,
+      html: getAdminOrderNotificationHTML({
+        customerName,
+        customerMobile,
+        total: Number(total),
+        paymentMethod,
+        address: `${address}, ${city}, ${state} - ${pincode}`,
+        orderId: order.id,
+      }),
+    });
+  }
+} catch (emailError) {
+  // Email fail ho toh order fail nahi hona chahiye
+  console.error("Email send error:", emailError);
+}
+// ===== END EMAILS =====
+
+return NextResponse.json({ success: true, order });
 
     return NextResponse.json({ success: true, order });
   } catch (error: any) {
