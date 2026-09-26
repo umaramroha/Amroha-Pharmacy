@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-
+import BottomNav from "@/components/layout/BottomNav";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
@@ -35,14 +35,17 @@ export default function RootLayout({
           <CartProvider>
             <WishlistProvider>
               <div className="flex min-h-screen flex-col">
-                <Header />
+               
+    <Header />
 
-                <main className="flex-1">
-                  {children}
-                </main>
+  <main className="flex-1 pb-16 md:pb-0">
+    {children}
+  </main>
 
-                <Footer />
-              </div>
+  <Footer />
+  <BottomNav />
+</div>
+
             </WishlistProvider>
           </CartProvider>
         </AuthProvider>
