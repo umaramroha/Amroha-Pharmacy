@@ -14,6 +14,7 @@ export type DeliveryZone = {
 };
 
 export const deliveryZones: DeliveryZone[] = [
+  // ZONE 1: Amroha Local
   {
     name: "Amroha Local",
     prefixes: ["2442"],
@@ -24,9 +25,29 @@ export const deliveryZones: DeliveryZone[] = [
     discount: 5,
     offerMessage: "🎉 Amroha me FREE Delivery + 5% OFF!",
   },
+  // ZONE 2: Nearby — Delhi NCR, West UP, Delhi-Lucknow Highway Belt
   {
-    name: "Uttar Pradesh",
-    prefixes: ["2"],
+    name: "Nearby / Priority Zone",
+    prefixes: [
+      "110", // Delhi
+      "201", // Noida, Greater Noida, Ghaziabad
+      "203", // Bulandshahr
+      "202", // Aligarh
+      "204", // Hathras
+      "205", // Firozabad
+      "207", // Etah
+      "244", // Moradabad, Rampur, Sambhal, Bijnor, Chandausi (Amroha already in Zone 1)
+      "243", // Bareilly, Pilibhit
+      "242", // Shahjahanpur
+      "245", // Hapur, Garhmukteshwar
+      "250", // Meerut, Baghpat, Muzaffarnagar, Saharanpur
+      "251", // Muzaffarnagar
+      "247", // Saharanpur
+      "226", // Lucknow
+      "121", // Faridabad (Haryana)
+      "122", // Gurgaon (Haryana)
+      "123", // Rewari (Haryana)
+    ],
     pincodes: [],
     deliveryDays: [2, 4],
     deliveryFee: 50,
@@ -34,9 +55,10 @@ export const deliveryZones: DeliveryZone[] = [
     discount: 0,
     offerMessage: "",
   },
+  // ZONE 3: Rest of India
   {
-    name: "Pan India",
-    prefixes: ["1", "3", "4", "5", "6", "7", "8", "9"],
+    name: "Standard Delivery",
+    prefixes: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
     pincodes: [],
     deliveryDays: [4, 7],
     deliveryFee: 80,
@@ -47,51 +69,20 @@ export const deliveryZones: DeliveryZone[] = [
 ];
 
 // ==============================
-// COD BLACKLIST (High Fraud / RTO / Remote)
+// COD BLACKLIST
 // ==============================
 
 export const codBlacklistPincodes: string[] = [
   // Haryana, Rajasthan, UP Border - High Fraud
-  "122107", // Nuh
-  "122108", // Punhana
-  "122104", // Ferozepur Jhirka
-  "122105", // Tauru
-  "321204", // Kaman, Bharatpur
-  "281403", // Kosi Kalan, Mathura
-
-  // Remote Islands (Andaman & Lakshadweep)
-  "744101", // Port Blair
-  "744202", // Mayabunder
-  "744301", // Car Nicobar
-  "744304", // Campbell Bay
-  "682551", // Kavaratti
-  "682553", // Androth
-  "682554", // Minicoy
-  "682555", // Agatti
-
+  "122107", "122108", "122104", "122105", "321204", "281403",
+  // Remote Islands
+  "744101", "744202", "744301", "744304", "682551", "682553", "682554", "682555",
   // Extreme High-Altitude (Ladakh & J&K)
-  "194101", // Leh
-  "194102", // Diskit
-  "194301", // Kargil
-  "194302", // Drass
-  "193222", // Kupwara Border
-  "192230", // Kishtwar Interiors
-
+  "194101", "194102", "194301", "194302", "193222", "192230",
   // Remote Mountain (Arunachal, Manipur, Nagaland)
-  "791102", // Tawang
-  "791111", // Ziro
-  "792110", // Changlang
-  "795142", // Ukhrul
-  "797112", // Mon
-
+  "791102", "791111", "792110", "795142", "797112",
   // High RTO (Bihar, Jharkhand, Chhattisgarh)
-  "855107", // Kishanganj
-  "855113", // Thakurganj
-  "854311", // Purnia Rural
-  "829204", // Latehar
-  "822114", // Garhwa
-  "494001", // Bastar
-  "494444", // Bijapur
+  "855107", "855113", "854311", "829204", "822114", "494001", "494444",
 ];
 
 // ==============================
@@ -107,7 +98,7 @@ export function getDeliveryZone(pincode: string): DeliveryZone | null {
   for (const zone of deliveryZones) {
     if (zone.pincodes.includes(pincode)) return zone;
   }
-  // Then prefix match
+  // Then prefix match (order matters — Zone 1 first, then Zone 2, then Zone 3)
   for (const zone of deliveryZones) {
     for (const prefix of zone.prefixes) {
       if (pincode.startsWith(prefix)) return zone;
@@ -176,7 +167,6 @@ export async function validatePincode(pincode: string): Promise<{
     return { valid: false };
   } catch (err) {
     console.error("Pincode validation error:", err);
-    // Fail open — agar API down ho toh allow karo
     return { valid: true };
   }
 }
