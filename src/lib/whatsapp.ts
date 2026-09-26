@@ -1,4 +1,4 @@
-export const WHATSAPP_NUMBER = "918077988509"; // Apna number 91+10 digits
+export const WHATSAPP_NUMBER = "918077988509";
 
 export function getWhatsAppLink(message: string): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;

@@ -16,12 +16,12 @@ export default function Home() {
       bg: "from-primary to-primary-dark",
     },
     {
-      title: "Free Delivery Above ₹500",
-      subtitle: "Fast delivery all over India with Cash on Delivery",
-      cta: "Browse Products",
-      href: "/products",
-      bg: "from-secondary to-secondary-dark",
-    },
+  title: "Authentic Ayurvedic Products",
+  subtitle: "Fast delivery all over India with Cash on Delivery",
+  cta: "Browse Products",
+  href: "/products",
+  bg: "from-secondary to-secondary-dark",
+},
     {
       title: "Order on WhatsApp",
       subtitle: "Quick ordering, expert guidance, and easy support",

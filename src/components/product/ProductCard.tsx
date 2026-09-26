@@ -16,28 +16,21 @@ type Product = {
   category?: string | null;
 };
 
-export default function ProductCard({
-  product,
-}: {
-  product: Product;
-}) {
+export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-
   const [justAdded, setJustAdded] = useState(false);
 
   const price = parseFloat(product.price);
   const mrp = product.mrp ? parseFloat(product.mrp) : price;
-
-  const discount =
-    mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
-
+  const discount = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
   const inWishlist = isInWishlist(product.id);
   const inStock = product.stock === undefined || product.stock > 0;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!inStock) return;
-
     addToCart({
       id: product.id,
       name: product.name,
@@ -45,158 +38,98 @@ export default function ProductCard({
       image: product.image || undefined,
       quantity: 1,
     });
-
     setJustAdded(true);
-
-    setTimeout(() => {
-      setJustAdded(false);
-    }, 1500);
+    setTimeout(() => setJustAdded(false), 1500);
   };
 
-  const handleWishlist = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
     toggleWishlist(product.id);
   };
 
   return (
-    <article className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-200 hover:border-gray-300 hover:shadow-lg">
-      {/* Wishlist */}
+    <div className="relative bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md hover:border-gray-300 transition group">
+      {/* Wishlist Heart */}
       <button
-        type="button"
         onClick={handleWishlist}
-        aria-label={
-          inWishlist
-            ? `Remove ${product.name} from wishlist`
-            : `Add ${product.name} to wishlist`
-        }
-        aria-pressed={inWishlist}
-        className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm transition-all hover:scale-105 hover:border-gray-300"
+        aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+        className="absolute top-1.5 right-1.5 z-10 w-7 h-7 rounded-full bg-white/95 backdrop-blur flex items-center justify-center shadow-sm hover:scale-110 transition"
       >
         <svg
-          viewBox="0 0 24 24"
-          className={`h-[18px] w-[18px] transition-colors ${
+          className={`w-3.5 h-3.5 transition ${
             inWishlist
-              ? "fill-red-500 text-red-500"
-              : "fill-none text-gray-500"
+              ? "text-red-500 fill-red-500"
+              : "text-gray-400 fill-none"
           }`}
           stroke="currentColor"
-          strokeWidth="1.8"
+          strokeWidth={2}
+          viewBox="0 0 24 24"
         >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
           />
         </svg>
       </button>
 
-      {/* Discount */}
+      {/* Discount Badge */}
       {discount > 0 && (
-        <span className="absolute left-3 top-3 z-10 rounded bg-green-600 px-2 py-1 text-[10px] font-bold tracking-wide text-white">
+        <span className="absolute top-1.5 left-1.5 z-10 bg-green-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
           {discount}% OFF
         </span>
       )}
 
-      {/* Product Link */}
-      <Link
-        href={`/products/${product.slug}`}
-        className="block"
-        aria-label={`View ${product.name}`}
-      >
-        {/* Product Image */}
-        <div className="relative flex aspect-square items-center justify-center overflow-hidden bg-gray-50 p-5">
+      <Link href={`/products/${product.slug}`} className="block">
+        {/* Image — smaller aspect */}
+        <div className="aspect-square bg-white p-3 flex items-center justify-center overflow-hidden">
           {product.image ? (
             <img
               src={product.image}
               alt={product.name}
-              loading="lazy"
-              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.04]"
+              className="w-full h-full object-contain group-hover:scale-105 transition duration-300"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-14 w-14 text-gray-300"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m9 5 2-2h2l2 2m-8 0h10m-11 0a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8 11h8M8 15h5"
-                />
-              </svg>
-            </div>
+            <span className="text-4xl text-gray-300">💊</span>
           )}
         </div>
 
-        {/* Product Info */}
-        <div className="p-4">
-          {/* Category */}
-          {product.category && (
-            <p className="mb-1 text-[10px] font-medium uppercase tracking-wider text-gray-400">
-              {product.category}
-            </p>
-          )}
-
-          {/* Name */}
-          <h3 className="mb-3 min-h-[42px] line-clamp-2 text-sm font-semibold leading-5 text-gray-800">
+        {/* Compact Info */}
+        <div className="px-2.5 pb-2.5">
+          <h3 className="font-medium text-[13px] text-gray-800 line-clamp-2 leading-tight min-h-[2rem] mb-1.5">
             {product.name}
           </h3>
 
-          {/* Price */}
-          <div className="flex flex-wrap items-baseline gap-2">
-            <span className="text-lg font-bold text-gray-900">
+          <div className="flex items-baseline gap-1.5 flex-wrap mb-2">
+            <span className="text-[15px] font-bold text-gray-900">
               ₹{price.toLocaleString("en-IN")}
             </span>
-
             {mrp > price && (
-              <span className="text-xs text-gray-400 line-through">
+              <span className="text-[10px] text-gray-400 line-through">
                 ₹{mrp.toLocaleString("en-IN")}
               </span>
             )}
           </div>
-
-          {/* Stock */}
-          <p
-            className={`mt-2 text-[11px] font-medium ${
-              inStock ? "text-green-600" : "text-red-500"
-            }`}
-          >
-            {inStock ? "In stock" : "Currently unavailable"}
-          </p>
         </div>
       </Link>
 
-      {/* Add To Cart */}
-      <div className="px-4 pb-4">
+      {/* Add Button — outside Link */}
+      <div className="px-2.5 pb-2.5">
         <button
-          type="button"
           onClick={handleAddToCart}
           disabled={!inStock}
-          className={`flex h-10 w-full items-center justify-center rounded-lg border text-xs font-semibold tracking-wide transition-all ${
+          className={`w-full h-8 rounded-md border text-[11px] font-bold tracking-wide transition ${
             !inStock
-              ? "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-400"
+              ? "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"
               : justAdded
-              ? "border-green-600 bg-green-600 text-white"
-              : "border-green-600 bg-white text-green-700 hover:bg-green-50"
+              ? "bg-green-600 border-green-600 text-white"
+              : "border-green-600 text-green-700 hover:bg-green-50"
           }`}
         >
-          {!inStock
-            ? "OUT OF STOCK"
-            : justAdded
-            ? "✓ ADDED TO CART"
-            : "ADD TO CART"}
+          {!inStock ? "OUT OF STOCK" : justAdded ? "✓ ADDED" : "ADD TO CART"}
         </button>
       </div>
-    </article>
+    </div>
   );
 }
