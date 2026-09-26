@@ -11,9 +11,23 @@ export default function ContactPage() {
     message: "",
   });
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+
+  const validateMobile = (mobile: string): boolean => {
+    const cleaned = mobile.replace(/[\s\-()]/g, "").replace(/^\+?91/, "");
+    return /^[6-9]\d{9}$/.test(cleaned);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!validateMobile(formData.mobile)) {
+      setError(
+        "Kripya sahi 10-digit mobile number daalein (jaise 9876543210)."
+      );
+      return;
+    }
 
     const message = `📩 *New Contact Message*
 
@@ -36,7 +50,6 @@ ${formData.message}`;
   return (
     <main className="min-h-screen bg-[#f8fafc]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
-        {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-3">
             Contact Us
@@ -55,7 +68,6 @@ ${formData.message}`;
             </h2>
 
             <div className="space-y-5">
-              {/* Address */}
               <div className="flex gap-4">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
                   <span className="text-xl">📍</span>
@@ -72,7 +84,6 @@ ${formData.message}`;
                 </div>
               </div>
 
-              {/* Phone */}
               <div className="flex gap-4">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
                   <span className="text-xl">📞</span>
@@ -90,7 +101,6 @@ ${formData.message}`;
                 </div>
               </div>
 
-              {/* Email */}
               <div className="flex gap-4">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
                   <span className="text-xl">✉️</span>
@@ -108,7 +118,6 @@ ${formData.message}`;
                 </div>
               </div>
 
-              {/* WhatsApp */}
               <div className="flex gap-4">
                 <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center shrink-0">
                   <span className="text-xl">💬</span>
@@ -129,7 +138,6 @@ ${formData.message}`;
               </div>
             </div>
 
-            {/* Response Time */}
             <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl">
               <p className="text-xs text-green-800 leading-relaxed">
                 💡 <strong>Quick Response:</strong> WhatsApp pe sabse jaldi
@@ -138,7 +146,6 @@ ${formData.message}`;
               </p>
             </div>
 
-            {/* Business Hours */}
             <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-xl">
               <p className="text-xs text-blue-800 leading-relaxed">
                 🕐 <strong>Business Hours:</strong> Monday to Saturday, 9:00 AM
@@ -156,6 +163,12 @@ ${formData.message}`;
             {sent && (
               <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
                 ✓ Message WhatsApp pe bhej diya gaya!
+              </div>
+            )}
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                {error}
               </div>
             )}
 
@@ -183,13 +196,20 @@ ${formData.message}`;
                 <input
                   type="tel"
                   required
+                  maxLength={13}
                   value={formData.mobile}
                   onChange={(e) =>
-                    setFormData({ ...formData, mobile: e.target.value })
+                    setFormData({
+                      ...formData,
+                      mobile: e.target.value.replace(/[^\d+\s-]/g, ""),
+                    })
                   }
                   className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-                  placeholder="+91 XXXXXXXXXX"
+                  placeholder="9876543210"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  10-digit mobile number
+                </p>
               </div>
 
               <div>
